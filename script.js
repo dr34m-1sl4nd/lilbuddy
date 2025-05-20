@@ -14,6 +14,9 @@ let petState = 'idle'; // idle, walk, grab, fall
 let pet = { x: 400, y: 300, width: 100, height: 100, vy: 0 };
 let isDragging = false;
 let dragOffset = { x: 0, y: 0 };
+let walkDirection = Math.random() < 0.5 ? -1 : 1; // -1 = left, 1 = right
+let walkTimer = 0;
+let walkDuration = Math.random() * 120 + 60; // frames
 
 const canvas = document.getElementById('pet-canvas');
 canvas.addEventListener('mousedown', (e) => {
@@ -44,7 +47,7 @@ window.addEventListener('mouseup', () => {
 });
 
 function update() {
-    
+    // Handle falling
     if (petState === 'fall') {
       pet.vy += 0.5; // gravity
       pet.y += pet.vy;
@@ -53,8 +56,37 @@ function update() {
         pet.vy = 0;
         petState = 'idle';
       }
+      return; // Don't walk while falling
     }
-  }
+
+    // -- Automatic random walk logic --
+    if (petState === 'idle' || petState === 'walk') {
+      walkTimer++;
+      if (walkTimer > walkDuration) {
+        // Randomly decide to walk or idle
+        if (petState === 'idle' && Math.random() < 0.5) {
+          petState = 'walk';
+          walkDirection = Math.random() < 0.5 ? -1 : 1;
+        } else {
+          petState = 'idle';
+        }
+        walkDuration = Math.random() * 120 + 60; // randomize next duration
+        walkTimer = 0;
+      }
+    }
+
+    if (petState === 'walk') {
+      pet.x += 2 * walkDirection;
+      // Bounce off edges
+      if (pet.x < 0) {
+        pet.x = 0;
+        walkDirection = 1;
+      } else if (pet.x + pet.width > canvas.width) {
+        pet.x = canvas.width - pet.width;
+        walkDirection = -1;
+      }
+    }
+}
 
   
   function draw() {
