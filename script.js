@@ -10,6 +10,9 @@ petGrab.src = 'assets/grabbed.gif';
 const petFall = new Image();
 petFall.src = 'assets/grabbed.gif';
 
+const petEat = new Image();
+petEat.src = 'assets/chewing.gif';
+
 let petState = 'idle'; // idle, walk, grab, fall
 let pet = { x: 400, y: 300, width: 100, height: 100, vy: 0 };
 let isDragging = false;
@@ -89,16 +92,31 @@ function update() {
 }
 
   
-  function draw() {
+function draw() {
     const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#b87fe3';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // walls
+ctx.fillStyle = '#e6ccb2';
+ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+// floor
+ctx.fillStyle = '#8b5e3c';
+ctx.fillRect(0, 390, canvas.width, 300);
     let petImg;
     if (petState === 'grab') petImg = petGrab;
     else if (petState === 'fall') petImg = petFall;
     else if (petState === 'walk') petImg = petWalk;
     else petImg = petIdle;
-    if (petImg.complete) ctx.drawImage(petImg, pet.x, pet.y, pet.width, pet.height);
+    if (petImg.complete) {
+      ctx.save();
+      if (petState === 'walk' && walkDirection === 1) {
+        ctx.translate(pet.x + pet.width, pet.y);
+        ctx.scale(-1, 1);
+        ctx.drawImage(petImg, 0, 0, pet.width, pet.height);
+      } else {
+        ctx.drawImage(petImg, pet.x, pet.y, pet.width, pet.height);
+      }
+      ctx.restore();
+    }
   }
   
   function loop() {
