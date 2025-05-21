@@ -13,14 +13,18 @@ petFall.src = 'assets/grabbed.gif';
 const petEat = new Image();
 petEat.src = 'assets/chewing.gif';
 
-const fridge = new Image();
-fridge.src = 'assets/fridge.png';
+const fridgeImg = new Image();
+fridgeImg.src = 'assets/fridge.png';
 
-const door = new Image();
-door.src = 'assets/door.png';
+const bedImg = new Image();
+bedImg.src = 'assets/bed.png';
 
-const bed = new Image();
-bed.src = 'assets/bed.png';
+const doorImg = new Image();
+doorImg.src = 'assets/door.png';
+
+const fridge = { x: 80, y: 190, width: 120, height: 220 };
+const bed = { x: 700, y: 300, width: 220, height: 100 };
+const door = { x: 500, y: 200, width: 120, height: 200 };
 
 let petState = 'idle'; // idle, walk, grab, fall
 let pet = { x: 425, y: 300, width: 100, height: 100, vy: 0 };
@@ -99,7 +103,6 @@ function update() {
       }
     }
 }
-
   
 function draw() {
     const ctx = canvas.getContext('2d');
@@ -110,10 +113,22 @@ ctx.fillRect(0, 0, canvas.width, canvas.height);
 // floor color
 ctx.fillStyle = '#0D1821';
 ctx.fillRect(0, 390, canvas.width, 300);
+
+if (fridgeImg.complete) {
+  ctx.drawImage(fridgeImg, fridge.x, fridge.y, fridge.width, fridge.height);
+}
+if (bedImg.complete) {
+  ctx.drawImage(bedImg, bed.x, bed.y, bed.width, bed.height);
+}
+if (doorImg.complete) {
+  ctx.drawImage(doorImg, door.x, door.y, door.width, door.height);
+}
+
     let petImg;
     if (petState === 'grab') petImg = petGrab;
     else if (petState === 'fall') petImg = petFall;
     else if (petState === 'walk') petImg = petWalk;
+    else if (petState === 'eat') petImg = petEat;
     else petImg = petIdle;
     if (petImg.complete) {
       ctx.save();
