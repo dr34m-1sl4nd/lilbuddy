@@ -13,8 +13,17 @@ petFall.src = 'assets/grabbed.gif';
 const petEat = new Image();
 petEat.src = 'assets/chewing.gif';
 
+const fridge = new Image();
+fridge.src = 'assets/fridge.png';
+
+const door = new Image();
+door.src = 'assets/door.png';
+
+const bed = new Image();
+bed.src = 'assets/bed.png';
+
 let petState = 'idle'; // idle, walk, grab, fall
-let pet = { x: 400, y: 300, width: 100, height: 100, vy: 0 };
+let pet = { x: 425, y: 300, width: 100, height: 100, vy: 0 };
 let isDragging = false;
 let dragOffset = { x: 0, y: 0 };
 let walkDirection = Math.random() < 0.5 ? -1 : 1; // -1 = left, 1 = right
@@ -94,12 +103,12 @@ function update() {
   
 function draw() {
     const ctx = canvas.getContext('2d');
-    // walls
-ctx.fillStyle = '#e6ccb2';
+    // wall color
+ctx.fillStyle = '#E6AACE';
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-// floor
-ctx.fillStyle = '#8b5e3c';
+// floor color
+ctx.fillStyle = '#0D1821';
 ctx.fillRect(0, 390, canvas.width, 300);
     let petImg;
     if (petState === 'grab') petImg = petGrab;

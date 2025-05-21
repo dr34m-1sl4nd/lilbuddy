@@ -1,5 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Darumadrop+One&display=swap');
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #0c062a;
+    overflow: hidden;
+    font-family: 'Darumadrop One';
+}
+
+h1 {
+    font-size: 100px;
+    margin: -30px 0 0 0;
+    color: #EEE5E9;
+}
+
 canvas {
-    width: 500px;
-    height: 500px;
-    background-color: #000000;
+    border: 10px solid #fff;
+}
+
+.stats-box {
+    background-color: #23045a;
+    height: 300px;
+    width: 1000px;
+    border: 10px solid #ffffff;
+    margin-top: 20px;
+    margin-bottom: 100px;
 }
