@@ -44,6 +44,18 @@ let cooldown = false;
 
 let gameOver = false;
 
+let isFlipping = false;
+let flipFrame = 0;
+const flipDuration = 30; // frames for the flip
+
+function maybeDoFlip() {
+  // 0.1% chance: 1 in 1000
+  if (!isFlipping && Math.random() < 0.001) {
+    isFlipping = true;
+    flipFrame = 0;
+  }
+}
+
 function updateStatBar(stat, value) {
   document.getElementById(stat + '-bar').style.width = value + '%';
 }
@@ -136,7 +148,6 @@ canvas.addEventListener('click', (e) => {
   if (mx >= bed.x && mx <= bed.x + bed.width && my >= bed.y && my <= bed.y + bed.height) {
     if (!cooldown) {
       energy = Math.min(100, energy + 20);
-      fun = Math.min(100, fun + 10);
       updateStatBar('energy', energy);
       petState = "sleeping";
       pet.x = bed.x + 40;
@@ -152,6 +163,8 @@ canvas.addEventListener('click', (e) => {
   if (mx >= fridge.x && mx <= fridge.x + fridge.width && my >= fridge.y && my <= fridge.y + fridge.height) {
     hunger = Math.min(100, hunger + 30);
     fun = Math.min(100, fun + 5);
+    pet.x = fridge.x + 40;
+    pet.y = 305;
     petState = 'eat';
     updateStatBar('hunger', hunger);
     updateStatBar('fun', fun);
@@ -273,6 +286,7 @@ function draw() {
 
 
 function loop() {
+  maybeDoFlip();
   update();
   draw();
   requestAnimationFrame(loop);
