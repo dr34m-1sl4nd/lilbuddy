@@ -38,19 +38,30 @@ let hunger = 1; // out of 100
 let energy = 1;
 let fun = 1;
 
+let gameOver = false;
+
 function updateStatBar(stat, value) {
   document.getElementById(stat + '-bar').style.width = value + '%';
 }
+
 
 updateStatBar('hunger', hunger);
 updateStatBar('energy', energy);
 updateStatBar('fun', fun);
 
+function showOverlay() {
+  const canvas = document.getElementById('pet-canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = 'rgba(20,0,0,0.8)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
 // checks if all stats are 0
 function checkGameOver() {
   if (hunger <= 0 && energy <= 0 && fun <= 0) {
-    clearInterval(statInterval); // Stop the periodic lowering
     gameOver = true;
+    clearInterval(statInterval); // Stop the periodic lowering
+    showOverlay();
     document.getElementById("dialogue").textContent = "Your feller decided to call a social worker and has now been relocated to a better home.";
   }
 }
@@ -191,7 +202,18 @@ function draw() {
       ctx.translate(pet.x + pet.width, pet.y);
       ctx.scale(-1, 1);
       ctx.drawImage(petImg, 0, 0, pet.width, pet.height);
-    } else {
+    } 
+    else if (gameOver === true) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#f2acd6';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#0D1821';
+      ctx.fillRect(0, 390, canvas.width, 300);
+      ctx.drawImage(fridgeImg, fridge.x, fridge.y, fridge.width, fridge.height);
+      ctx.drawImage(bedImg, bed.x, bed.y, bed.width, bed.height);
+      ctx.drawImage(doorImg, door.x, door.y, door.width, door.height);
+    }
+    else {
       ctx.drawImage(petImg, pet.x, pet.y, pet.width, pet.height);
     }
     ctx.restore();
