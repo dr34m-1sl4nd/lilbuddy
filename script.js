@@ -34,9 +34,9 @@ let walkDirection = Math.random() < 0.5 ? -1 : 1; // -1 = left, 1 = right
 let walkTimer = 0;
 let walkDuration = Math.random() * 120 + 60; // frames
 
-let hunger = 1; // out of 100
-let energy = 1;
-let fun = 1;
+let hunger = 75; // out of 100
+let energy = 75;
+let fun = 75;
 
 let gameOver = false;
 
@@ -180,6 +180,8 @@ function draw() {
   ctx.fillStyle = '#0D1821';
   ctx.fillRect(0, 390, canvas.width, 300);
 
+
+  // furniture
   if (fridgeImg.complete) {
     ctx.drawImage(fridgeImg, fridge.x, fridge.y, fridge.width, fridge.height);
   }
@@ -190,6 +192,7 @@ function draw() {
     ctx.drawImage(doorImg, door.x, door.y, door.width, door.height);
   }
 
+  // darw pet
   let petImg;
   if (petState === 'grab') petImg = petGrab;
   else if (petState === 'fall') petImg = petFall;
@@ -198,12 +201,15 @@ function draw() {
   else petImg = petIdle;
   if (petImg.complete) {
     ctx.save();
-    if (petState === 'walk' && walkDirection === 1) {
+    if (petState === 'walk' && walkDirection === 1 && gameOver === false) {
       ctx.translate(pet.x + pet.width, pet.y);
       ctx.scale(-1, 1);
       ctx.drawImage(petImg, 0, 0, pet.width, pet.height);
     } 
-    else if (gameOver === true) {
+    else if (gameOver === false) {
+      ctx.drawImage(petImg, pet.x, pet.y, pet.width, pet.height);
+    }
+    else {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = '#f2acd6';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -212,9 +218,6 @@ function draw() {
       ctx.drawImage(fridgeImg, fridge.x, fridge.y, fridge.width, fridge.height);
       ctx.drawImage(bedImg, bed.x, bed.y, bed.width, bed.height);
       ctx.drawImage(doorImg, door.x, door.y, door.width, door.height);
-    }
-    else {
-      ctx.drawImage(petImg, pet.x, pet.y, pet.width, pet.height);
     }
     ctx.restore();
   }
