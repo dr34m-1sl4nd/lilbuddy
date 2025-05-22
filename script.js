@@ -25,9 +25,9 @@ bedImg.src = 'assets/bed.png';
 const doorImg = new Image();
 doorImg.src = 'assets/door.png';
 
-const fridge = { x: 80, y: 130, width: 140, height: 280 };
+const fridge = { x: 0, y: 130, width: 140, height: 280 };
 const bed = { x: 800, y: 300, width: 220, height: 100 };
-const door = { x: 500, y: 180, width: 144, height: 220 };
+const door = { x: 445, y: 180, width: 144, height: 220 };
 
 let petState = 'idle'; // idle, walk, grab, fall
 let pet = { x: 425, y: 305, width: 100, height: 100, vy: 0 };
@@ -91,9 +91,9 @@ function notifyNeed() {
 
 // lower stats every 5 seconds
 const statInterval = setInterval(() => {
-  hunger = Math.max(0, hunger - 0.4);
+  hunger = Math.max(0, hunger - 0.3);
   energy = Math.max(0, energy - 0.2);
-  fun = Math.max(0, fun - 0.6);
+  fun = Math.max(0, fun - 0.4);
 
   updateStatBar('hunger', hunger);
   updateStatBar('energy', energy);
@@ -200,6 +200,7 @@ function update() {
 
   if (petState === 'walk') {
     pet.x += 2 * walkDirection;
+    pet.y = 305; // keep pet on the ground
     // Bounce off edges
     if (pet.x < 0) {
       pet.x = 0;
