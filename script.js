@@ -27,7 +27,7 @@ const bed = { x: 750, y: 300, width: 220, height: 100 };
 const door = { x: 500, y: 180, width: 144, height: 220 };
 
 let petState = 'idle'; // idle, walk, grab, fall
-let pet = { x: 425, y: 300, width: 100, height: 100, vy: 0 };
+let pet = { x: 425, y: 305, width: 100, height: 100, vy: 0 };
 let isDragging = false;
 let dragOffset = { x: 0, y: 0 };
 let walkDirection = Math.random() < 0.5 ? -1 : 1; // -1 = left, 1 = right
@@ -81,7 +81,7 @@ function notifyNeed() {
     document.getElementById("dialogue").textContent = "Your Feller is bored.";
   }
   else {
-    document.getElementById("dialogue").textContent = "";
+    return;
   }
 }
 
@@ -100,6 +100,8 @@ const statInterval = setInterval(() => {
   checkGameOver();
 }, 1000);
 
+
+// dragging pet
 const canvas = document.getElementById('pet-canvas');
 canvas.addEventListener('mousedown', (e) => {
   const rect = canvas.getBoundingClientRect();
@@ -222,6 +224,7 @@ function draw() {
     ctx.restore();
   }
 }
+
 
 function loop() {
   update();
