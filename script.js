@@ -34,34 +34,60 @@ let walkDirection = Math.random() < 0.5 ? -1 : 1; // -1 = left, 1 = right
 let walkTimer = 0;
 let walkDuration = Math.random() * 120 + 60; // frames
 
-let hunger = 2; // out of 100
-let energy = 2;
-let fun = 2;
+let hunger = 1; // out of 100
+let energy = 1;
+let fun = 1;
 
 function updateStatBar(stat, value) {
   document.getElementById(stat + '-bar').style.width = value + '%';
 }
 
-// This function checks if all stats are 0
+updateStatBar('hunger', hunger);
+updateStatBar('energy', energy);
+updateStatBar('fun', fun);
+
+// checks if all stats are 0
 function checkGameOver() {
   if (hunger <= 0 && energy <= 0 && fun <= 0) {
     clearInterval(statInterval); // Stop the periodic lowering
+    gameOver = true;
     document.getElementById("dialogue").textContent = "Your feller decided to call a social worker and has now been relocated to a better home.";
   }
 }
 
-// Periodically lower stats every 5 seconds
+// display messages when stat falls below 25
+function notifyNeed() {
+  if (hunger < 25 && energy < 25 && fun < 25) {
+    document.getElementById("dialogue").textContent = "Your Feller is feeling neglected.";
+  }
+  else if (hunger < 25) {
+    document.getElementById("dialogue").textContent = "Your Feller is hungry.";
+  }
+  else if (energy < 25) {
+    document.getElementById("dialogue").textContent = "Your Feller is tired.";
+  }
+  else if (fun < 25) {
+    document.getElementById("dialogue").textContent = "Your Feller is bored.";
+  }
+  else {
+    document.getElementById("dialogue").textContent = "";
+  }
+}
+
+
+// lower stats every 5 seconds
 const statInterval = setInterval(() => {
-  hunger = Math.max(0, hunger - 5);
-  energy = Math.max(0, energy - 3);
-  fun = Math.max(0, fun - 4);
+  hunger = Math.max(0, hunger - 0.4);
+  energy = Math.max(0, energy - 0.2);
+  fun = Math.max(0, fun - 0.6);
 
   updateStatBar('hunger', hunger);
   updateStatBar('energy', energy);
   updateStatBar('fun', fun);
 
+  notifyNeed();
   checkGameOver();
-}, 5000);
+}, 1000);
 
 const canvas = document.getElementById('pet-canvas');
 canvas.addEventListener('mousedown', (e) => {
@@ -92,89 +118,89 @@ window.addEventListener('mouseup', () => {
 });
 
 function update() {
-    // Handle falling
-    if (petState === 'fall') {
-      pet.vy += 0.5; // gravity
-      pet.y += pet.vy;
-      if (pet.y >= 300) { // ground level (canvas height - pet height)
-        pet.y = 300;
-        pet.vy = 0;
+  // Handle falling
+  if (petState === 'fall') {
+    pet.vy += 0.5; // gravity
+    pet.y += pet.vy;
+    if (pet.y >= 300) { // ground level (canvas height - pet height)
+      pet.y = 300;
+      pet.vy = 0;
+      petState = 'idle';
+    }
+    return; // Don't walk while falling
+  }
+
+  // -- Automatic random walk logic --
+  if (petState === 'idle' || petState === 'walk') {
+    walkTimer++;
+    if (walkTimer > walkDuration) {
+      // Randomly decide to walk or idle
+      if (petState === 'idle' && Math.random() < 0.5) {
+        petState = 'walk';
+        walkDirection = Math.random() < 0.5 ? -1 : 1;
+      } else {
         petState = 'idle';
       }
-      return; // Don't walk while falling
+      walkDuration = Math.random() * 120 + 60; // randomize next duration
+      walkTimer = 0;
     }
+  }
 
-    // -- Automatic random walk logic --
-    if (petState === 'idle' || petState === 'walk') {
-      walkTimer++;
-      if (walkTimer > walkDuration) {
-        // Randomly decide to walk or idle
-        if (petState === 'idle' && Math.random() < 0.5) {
-          petState = 'walk';
-          walkDirection = Math.random() < 0.5 ? -1 : 1;
-        } else {
-          petState = 'idle';
-        }
-        walkDuration = Math.random() * 120 + 60; // randomize next duration
-        walkTimer = 0;
-      }
+  if (petState === 'walk') {
+    pet.x += 2 * walkDirection;
+    // Bounce off edges
+    if (pet.x < 0) {
+      pet.x = 0;
+      walkDirection = 1;
+    } else if (pet.x + pet.width > canvas.width) {
+      pet.x = canvas.width - pet.width;
+      walkDirection = -1;
     }
-
-    if (petState === 'walk') {
-      pet.x += 2 * walkDirection;
-      // Bounce off edges
-      if (pet.x < 0) {
-        pet.x = 0;
-        walkDirection = 1;
-      } else if (pet.x + pet.width > canvas.width) {
-        pet.x = canvas.width - pet.width;
-        walkDirection = -1;
-      }
-    }
+  }
 }
-  
+
 function draw() {
-    const ctx = canvas.getContext('2d');
-    // wall color
-ctx.fillStyle = '#f2acd6';
-ctx.fillRect(0, 0, canvas.width, canvas.height);
+  const ctx = canvas.getContext('2d');
+  // wall color
+  ctx.fillStyle = '#f2acd6';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-// floor color
-ctx.fillStyle = '#0D1821';
-ctx.fillRect(0, 390, canvas.width, 300);
+  // floor color
+  ctx.fillStyle = '#0D1821';
+  ctx.fillRect(0, 390, canvas.width, 300);
 
-if (fridgeImg.complete) {
-  ctx.drawImage(fridgeImg, fridge.x, fridge.y, fridge.width, fridge.height);
-}
-if (bedImg.complete) {
-  ctx.drawImage(bedImg, bed.x, bed.y, bed.width, bed.height);
-}
-if (doorImg.complete) {
-  ctx.drawImage(doorImg, door.x, door.y, door.width, door.height);
-}
+  if (fridgeImg.complete) {
+    ctx.drawImage(fridgeImg, fridge.x, fridge.y, fridge.width, fridge.height);
+  }
+  if (bedImg.complete) {
+    ctx.drawImage(bedImg, bed.x, bed.y, bed.width, bed.height);
+  }
+  if (doorImg.complete) {
+    ctx.drawImage(doorImg, door.x, door.y, door.width, door.height);
+  }
 
-    let petImg;
-    if (petState === 'grab') petImg = petGrab;
-    else if (petState === 'fall') petImg = petFall;
-    else if (petState === 'walk') petImg = petWalk;
-    else if (petState === 'eat') petImg = petEat;
-    else petImg = petIdle;
-    if (petImg.complete) {
-      ctx.save();
-      if (petState === 'walk' && walkDirection === 1) {
-        ctx.translate(pet.x + pet.width, pet.y);
-        ctx.scale(-1, 1);
-        ctx.drawImage(petImg, 0, 0, pet.width, pet.height);
-      } else {
-        ctx.drawImage(petImg, pet.x, pet.y, pet.width, pet.height);
-      }
-      ctx.restore();
+  let petImg;
+  if (petState === 'grab') petImg = petGrab;
+  else if (petState === 'fall') petImg = petFall;
+  else if (petState === 'walk') petImg = petWalk;
+  else if (petState === 'eat') petImg = petEat;
+  else petImg = petIdle;
+  if (petImg.complete) {
+    ctx.save();
+    if (petState === 'walk' && walkDirection === 1) {
+      ctx.translate(pet.x + pet.width, pet.y);
+      ctx.scale(-1, 1);
+      ctx.drawImage(petImg, 0, 0, pet.width, pet.height);
+    } else {
+      ctx.drawImage(petImg, pet.x, pet.y, pet.width, pet.height);
     }
+    ctx.restore();
   }
-  
-  function loop() {
-    update();
-    draw();
-    requestAnimationFrame(loop);
-  }
-  loop();
+}
+
+function loop() {
+  update();
+  draw();
+  requestAnimationFrame(loop);
+}
+loop();
