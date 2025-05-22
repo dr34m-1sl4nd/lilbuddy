@@ -7,15 +7,17 @@
     <link rel ="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>RAISE A FELLER</h1>
+    <div class="rainbow-text">
+        <span class="block-line"><span><span style="color:#ff0000">R</span><span style="color:#ff8000">A</span><span style="color:#ffff00">I</span><span style="color:#80ff00">S</span><span style="color:#00ff00">E&nbsp;</span></span><span style="color:#00ff80">A&nbsp;</span><span><span style="color:#00ffff">F</span><span style="color:#007fff">E</span><span style="color:#0000ff">L</span><span style="color:#7f00ff">L</span><span style="color:#ff00ff">E</span><span style="color:#ff0080">R</span></span></span>
+    </div>
     <canvas id="pet-canvas" width="1000" height="500"></canvas>
     <section class= "stats-box" id="stats-box">
         <p id="dialogue"></p>
-        <div id="stats-container">
-            <div id="hungerBar"></div>
-            <div id="funBar"></div>
-            <div id="energyBar"></div>
-        </div>
+        <div class="stat-container">
+            <div class="stat-name">Hunger: <div class="stat-bar-bg"><div id="hunger-bar" class="stat-bar"></div></div></div>
+            <div class="stat-name">Energy: <div class="stat-bar-bg"><div id="energy-bar" class="stat-bar"></div></div></div>
+            <div class="stat-name">Fun: <div class="stat-bar-bg"><div id="fun-bar" class="stat-bar"></div></div></div>
+          </div>
     </section>
     <script src="script.js"></script>
 </body>

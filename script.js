@@ -22,9 +22,9 @@ bedImg.src = 'assets/bed.png';
 const doorImg = new Image();
 doorImg.src = 'assets/door.png';
 
-const fridge = { x: 80, y: 190, width: 120, height: 220 };
-const bed = { x: 700, y: 300, width: 220, height: 100 };
-const door = { x: 500, y: 200, width: 120, height: 200 };
+const fridge = { x: 80, y: 140, width: 144, height: 270 };
+const bed = { x: 750, y: 300, width: 220, height: 100 };
+const door = { x: 500, y: 180, width: 144, height: 220 };
 
 let petState = 'idle'; // idle, walk, grab, fall
 let pet = { x: 425, y: 300, width: 100, height: 100, vy: 0 };
@@ -33,6 +33,35 @@ let dragOffset = { x: 0, y: 0 };
 let walkDirection = Math.random() < 0.5 ? -1 : 1; // -1 = left, 1 = right
 let walkTimer = 0;
 let walkDuration = Math.random() * 120 + 60; // frames
+
+let hunger = 2; // out of 100
+let energy = 2;
+let fun = 2;
+
+function updateStatBar(stat, value) {
+  document.getElementById(stat + '-bar').style.width = value + '%';
+}
+
+// This function checks if all stats are 0
+function checkGameOver() {
+  if (hunger <= 0 && energy <= 0 && fun <= 0) {
+    clearInterval(statInterval); // Stop the periodic lowering
+    document.getElementById("dialogue").textContent = "Your feller decided to call a social worker and has now been relocated to a better home.";
+  }
+}
+
+// Periodically lower stats every 5 seconds
+const statInterval = setInterval(() => {
+  hunger = Math.max(0, hunger - 5);
+  energy = Math.max(0, energy - 3);
+  fun = Math.max(0, fun - 4);
+
+  updateStatBar('hunger', hunger);
+  updateStatBar('energy', energy);
+  updateStatBar('fun', fun);
+
+  checkGameOver();
+}, 5000);
 
 const canvas = document.getElementById('pet-canvas');
 canvas.addEventListener('mousedown', (e) => {
@@ -107,7 +136,7 @@ function update() {
 function draw() {
     const ctx = canvas.getContext('2d');
     // wall color
-ctx.fillStyle = '#E6AACE';
+ctx.fillStyle = '#f2acd6';
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 // floor color
