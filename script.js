@@ -22,8 +22,8 @@ bedImg.src = 'assets/bed.png';
 const doorImg = new Image();
 doorImg.src = 'assets/door.png';
 
-const fridge = { x: 80, y: 140, width: 144, height: 270 };
-const bed = { x: 750, y: 300, width: 220, height: 100 };
+const fridge = { x: 80, y: 130, width: 140, height: 280 };
+const bed = { x: 800, y: 300, width: 220, height: 100 };
 const door = { x: 500, y: 180, width: 144, height: 220 };
 
 let petState = 'idle'; // idle, walk, grab, fall
@@ -34,9 +34,9 @@ let walkDirection = Math.random() < 0.5 ? -1 : 1; // -1 = left, 1 = right
 let walkTimer = 0;
 let walkDuration = Math.random() * 120 + 60; // frames
 
-let hunger = 75; // out of 100
-let energy = 75;
-let fun = 75;
+let hunger = 1; // out of 100
+let energy = 1;
+let fun = 1;
 
 let gameOver = false;
 
@@ -135,8 +135,8 @@ function update() {
   if (petState === 'fall') {
     pet.vy += 0.5; // gravity
     pet.y += pet.vy;
-    if (pet.y >= 300) { // ground level (canvas height - pet height)
-      pet.y = 300;
+    if (pet.y >= 305) { // ground level (canvas height - pet height)
+      pet.y = 305;
       pet.vy = 0;
       petState = 'idle';
     }
@@ -194,7 +194,7 @@ function draw() {
     ctx.drawImage(doorImg, door.x, door.y, door.width, door.height);
   }
 
-  // darw pet
+  // draw pet
   let petImg;
   if (petState === 'grab') petImg = petGrab;
   else if (petState === 'fall') petImg = petFall;
@@ -207,7 +207,12 @@ function draw() {
       ctx.translate(pet.x + pet.width, pet.y);
       ctx.scale(-1, 1);
       ctx.drawImage(petImg, 0, 0, pet.width, pet.height);
-    } 
+    }
+    else if (petState === 'idle' && walkDirection === 1 && gameOver === false) {
+      ctx.translate(pet.x + pet.width, pet.y);
+      ctx.scale(-1, 1);
+      ctx.drawImage(petImg, 0, 0, pet.width, pet.height);
+    }
     else if (gameOver === false) {
       ctx.drawImage(petImg, pet.x, pet.y, pet.width, pet.height);
     }
