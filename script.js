@@ -13,6 +13,9 @@ petFall.src = 'assets/grabbed.gif';
 const petEat = new Image();
 petEat.src = 'assets/chewing.gif';
 
+const petSleep = new Image();
+petSleep.src = 'assets/idle.gif';
+
 const fridgeImg = new Image();
 fridgeImg.src = 'assets/fridge.png';
 
@@ -34,16 +37,16 @@ let walkDirection = Math.random() < 0.5 ? -1 : 1; // -1 = left, 1 = right
 let walkTimer = 0;
 let walkDuration = Math.random() * 120 + 60; // frames
 
-let hunger = 1; // out of 100
-let energy = 1;
-let fun = 1;
+let hunger = 50; // out of 100
+let energy = 50;
+let fun = 50;
+let cooldown = false;
 
 let gameOver = false;
 
 function updateStatBar(stat, value) {
   document.getElementById(stat + '-bar').style.width = value + '%';
 }
-
 
 updateStatBar('hunger', hunger);
 updateStatBar('energy', energy);
@@ -120,6 +123,42 @@ canvas.addEventListener('mousemove', (e) => {
     const rect = canvas.getBoundingClientRect();
     pet.x = e.clientX - rect.left - dragOffset.x;
     pet.y = e.clientY - rect.top - dragOffset.y;
+  }
+});
+canvas.addEventListener('click', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+
+
+
+  // Check if clicked on bed
+  if (mx >= bed.x && mx <= bed.x + bed.width && my >= bed.y && my <= bed.y + bed.height) {
+    if (!cooldown) {
+      energy = Math.min(100, energy + 20);
+      fun = Math.min(100, fun + 10);
+      updateStatBar('energy', energy);
+      petState = "sleeping";
+      pet.x = bed.x + 40;
+      pet.y = bed.y - 45;
+      setTimeout(() => {
+        petState = 'idle';
+      }, 5000);
+      document.getElementById("dialogue").textContent = "Your Feller has taken a nap.";
+    }
+  }
+
+  // Check if clicked on fridge
+  if (mx >= fridge.x && mx <= fridge.x + fridge.width && my >= fridge.y && my <= fridge.y + fridge.height) {
+    hunger = Math.min(100, hunger + 30);
+    fun = Math.min(100, fun + 5);
+    petState = 'eat';
+    updateStatBar('hunger', hunger);
+    updateStatBar('fun', fun);
+    setTimeout(() => {
+      petState = 'idle';
+    }, 3000);
+    document.getElementById("dialogue").textContent = "Your Feller has eaten.";
   }
 });
 window.addEventListener('mouseup', () => {
@@ -200,6 +239,7 @@ function draw() {
   else if (petState === 'fall') petImg = petFall;
   else if (petState === 'walk') petImg = petWalk;
   else if (petState === 'eat') petImg = petEat;
+  else if (petState === 'sleeping') petImg = petSleep;
   else petImg = petIdle;
   if (petImg.complete) {
     ctx.save();
