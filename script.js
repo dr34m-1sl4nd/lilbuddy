@@ -275,9 +275,9 @@ function draw() {
     }
     else {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#f2acd6';
+      ctx.fillStyle = wallColor;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#0D1821';
+      ctx.fillStyle = floorColor;
       ctx.fillRect(0, 390, canvas.width, 300);
       ctx.drawImage(fridgeImg, fridge.x, fridge.y, fridge.width, fridge.height);
       ctx.drawImage(bedImg, bed.x, bed.y, bed.width, bed.height);
