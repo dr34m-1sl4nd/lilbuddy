@@ -80,7 +80,7 @@ function checkGameOver() {
     gameOver = true;
     clearInterval(statInterval); // Stop the periodic lowering
     showOverlay();
-    document.getElementById("dialogue").textContent = "Your feller decided to call a social worker and has now been relocated to a better home.";
+    document.getElementById("dialogue").textContent = "Your Feller decided to call a social worker and has now been relocated to a better home.";
   }
 }
 

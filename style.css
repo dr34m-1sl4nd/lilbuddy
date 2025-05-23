@@ -63,8 +63,10 @@ canvas {
 
   .color-picker {
     display: flex;
-    flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    margin: -20px 0 10px 0;
+  }
+
+  .color-picker label {
+   margin: 5px 10px 30px 10px;
   }
