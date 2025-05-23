@@ -8,6 +8,7 @@ body {
     background: #0c062a;
     overflow: hidden;
     font-family: 'Darumadrop One';
+    color: #fff;
 }
 
 .rainbow-text {
@@ -22,7 +23,7 @@ canvas {
 
 .stats-box {
     background-color: #23045a;
-    height: 300px;
+    height: 250px;
     width: 1000px;
     border: 10px solid #ffffff;
     margin-top: 20px;
@@ -57,5 +58,13 @@ canvas {
     font-size: 30px;
     height: 40px;
     text-overflow: ellipsis;
-    margin: 20px;
+    margin: 20px 20px -40px 20px;
+  }
+
+  .color-picker {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    margin: -20px 0 10px 0;
   }

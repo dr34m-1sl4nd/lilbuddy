@@ -44,6 +44,9 @@ let cooldown = false;
 
 let gameOver = false;
 
+let floorColor = '#cccccc';
+let wallColor = '#999999';
+
 let isFlipping = false;
 let flipFrame = 0;
 const flipDuration = 30; // frames for the flip
@@ -101,7 +104,7 @@ function notifyNeed() {
 }
 
 
-// lower stats every 5 seconds
+// lower stats every second
 const statInterval = setInterval(() => {
   hunger = Math.max(0, hunger - 0.3);
   energy = Math.max(0, energy - 0.2);
@@ -228,11 +231,11 @@ function update() {
 function draw() {
   const ctx = canvas.getContext('2d');
   // wall color
-  ctx.fillStyle = '#f2acd6';
+  ctx.fillStyle = wallColor;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   // floor color
-  ctx.fillStyle = '#0D1821';
+  ctx.fillStyle = floorColor;
   ctx.fillRect(0, 390, canvas.width, 300);
 
 
@@ -283,6 +286,17 @@ function draw() {
     ctx.restore();
   }
 }
+
+// Event listeners for color pickers
+document.getElementById('floorColorPicker').addEventListener('input', function(e) {
+  floorColor = e.target.value;
+  draw();
+});
+
+document.getElementById('wallColorPicker').addEventListener('input', function(e) {
+  wallColor = e.target.value;
+  draw();
+});
 
 
 function loop() {
