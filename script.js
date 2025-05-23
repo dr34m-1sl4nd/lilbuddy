@@ -44,8 +44,8 @@ let cooldown = false;
 
 let gameOver = false;
 
-let floorColor = '#cccccc';
-let wallColor = '#999999';
+let floorColor = '#0D1821';
+let wallColor = '#f2acd6';
 
 let isFlipping = false;
 let flipFrame = 0;
