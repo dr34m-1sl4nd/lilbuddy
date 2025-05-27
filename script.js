@@ -42,22 +42,12 @@ let energy = 50;
 let fun = 50;
 let cooldown = false;
 
+let outside = false
+
 let gameOver = false;
 
 let floorColor = '#0D1821';
 let wallColor = '#f2acd6';
-
-let isFlipping = false;
-let flipFrame = 0;
-const flipDuration = 30; // frames for the flip
-
-function maybeDoFlip() {
-  // 0.1% chance: 1 in 1000
-  if (!isFlipping && Math.random() < 0.001) {
-    isFlipping = true;
-    flipFrame = 0;
-  }
-}
 
 function updateStatBar(stat, value) {
   document.getElementById(stat + '-bar').style.width = value + '%';
@@ -131,6 +121,8 @@ canvas.addEventListener('mousedown', (e) => {
     dragOffset.x = mx - pet.x;
     dragOffset.y = my - pet.y;
     petState = 'grab';
+    fun = Math.min(100, fun + 2);
+    updateStatBar('fun', fun);
   }
 });
 canvas.addEventListener('mousemove', (e) => {
@@ -230,6 +222,7 @@ function update() {
 
 function draw() {
   const ctx = canvas.getContext('2d');
+
   // wall color
   ctx.fillStyle = wallColor;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -249,7 +242,6 @@ function draw() {
   if (doorImg.complete) {
     ctx.drawImage(doorImg, door.x, door.y, door.width, door.height);
   }
-
   // draw pet
   let petImg;
   if (petState === 'grab') petImg = petGrab;
@@ -288,19 +280,18 @@ function draw() {
 }
 
 // Event listeners for color pickers
-document.getElementById('floorColorPicker').addEventListener('input', function(e) {
+document.getElementById('floorColorPicker').addEventListener('input', function (e) {
   floorColor = e.target.value;
   draw();
 });
 
-document.getElementById('wallColorPicker').addEventListener('input', function(e) {
+document.getElementById('wallColorPicker').addEventListener('input', function (e) {
   wallColor = e.target.value;
   draw();
 });
 
 
 function loop() {
-  maybeDoFlip();
   update();
   draw();
   requestAnimationFrame(loop);
