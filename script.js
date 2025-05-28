@@ -138,35 +138,53 @@ canvas.addEventListener('click', (e) => {
   const my = e.clientY - rect.top;
 
 
+  if (!gameOver) {
+    // Check if clicked on bed
+    if (mx >= bed.x && mx <= bed.x + bed.width && my >= bed.y && my <= bed.y + bed.height) {
+      if (!cooldown) {
+        energy = Math.min(100, energy + 20);
+        updateStatBar('energy', energy);
+        petState = "sleeping";
+        pet.x = bed.x + 40;
+        pet.y = bed.y - 45;
+        setTimeout(() => {
+          petState = 'idle';
+        }, 5000);
+        document.getElementById("dialogue").textContent = "Your Feller has taken a nap.";
+      }
+    }
 
-  // Check if clicked on bed
-  if (mx >= bed.x && mx <= bed.x + bed.width && my >= bed.y && my <= bed.y + bed.height) {
-    if (!cooldown) {
-      energy = Math.min(100, energy + 20);
-      updateStatBar('energy', energy);
-      petState = "sleeping";
-      pet.x = bed.x + 40;
-      pet.y = bed.y - 45;
+    // Check if clicked on fridge
+    if (mx >= fridge.x && mx <= fridge.x + fridge.width && my >= fridge.y && my <= fridge.y + fridge.height) {
+      hunger = Math.min(100, hunger + 30);
+      fun = Math.min(100, fun + 5);
+      pet.x = fridge.x + 40;
+      pet.y = 305;
+      petState = 'eat';
+      updateStatBar('hunger', hunger);
+      updateStatBar('fun', fun);
       setTimeout(() => {
         petState = 'idle';
-      }, 5000);
-      document.getElementById("dialogue").textContent = "Your Feller has taken a nap.";
+      }, 3000);
+      document.getElementById("dialogue").textContent = "Your Feller has eaten.";
     }
-  }
 
-  // Check if clicked on fridge
-  if (mx >= fridge.x && mx <= fridge.x + fridge.width && my >= fridge.y && my <= fridge.y + fridge.height) {
-    hunger = Math.min(100, hunger + 30);
-    fun = Math.min(100, fun + 5);
-    pet.x = fridge.x + 40;
-    pet.y = 305;
-    petState = 'eat';
-    updateStatBar('hunger', hunger);
-    updateStatBar('fun', fun);
-    setTimeout(() => {
-      petState = 'idle';
-    }, 3000);
-    document.getElementById("dialogue").textContent = "Your Feller has eaten.";
+    // Check if clicked on door
+    if (mx >= door.x && mx <= door.x + door.width && my >= door.y && my <= door.y + door.height) {
+      if (!outside) {
+        outside = true;
+        pet.x = 425; // reset pet position
+        pet.y = 305;
+        petState = 'idle';
+        document.getElementById("dialogue").textContent = "Your Feller has gone outside.";
+      } else {
+        outside = false;
+        pet.x = 425; // reset pet position
+        pet.y = 305;
+        petState = 'idle';
+        document.getElementById("dialogue").textContent = "Your Feller has come back inside.";
+      }
+    }
   }
 });
 window.addEventListener('mouseup', () => {
@@ -262,6 +280,13 @@ function draw() {
       ctx.scale(-1, 1);
       ctx.drawImage(petImg, 0, 0, pet.width, pet.height);
     }
+    else if (outside === true) {
+      ctx.fillStyle = '#87CEEB'; // sky color
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#228B22'; // grass color
+      ctx.fillRect(0, 390, canvas.width, 300);
+      ctx.drawImage(petImg, pet.x, pet.y, pet.width, pet.height);
+    }
     else if (gameOver === false) {
       ctx.drawImage(petImg, pet.x, pet.y, pet.width, pet.height);
     }
@@ -274,6 +299,8 @@ function draw() {
       ctx.drawImage(fridgeImg, fridge.x, fridge.y, fridge.width, fridge.height);
       ctx.drawImage(bedImg, bed.x, bed.y, bed.width, bed.height);
       ctx.drawImage(doorImg, door.x, door.y, door.width, door.height);
+      ctx.fillStyle = 'rgba(0,0,0,0.7)'; // dark overlay
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
     ctx.restore();
   }
