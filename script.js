@@ -140,7 +140,7 @@ canvas.addEventListener('click', (e) => {
 
   if (!gameOver) {
     // Check if clicked on bed
-    if (mx >= bed.x && mx <= bed.x + bed.width && my >= bed.y && my <= bed.y + bed.height) {
+    if (mx >= bed.x && mx <= bed.x + bed.width && my >= bed.y && my <= bed.y + bed.height && outside === false) {
       if (!cooldown) {
         energy = Math.min(100, energy + 20);
         updateStatBar('energy', energy);
@@ -155,7 +155,7 @@ canvas.addEventListener('click', (e) => {
     }
 
     // Check if clicked on fridge
-    if (mx >= fridge.x && mx <= fridge.x + fridge.width && my >= fridge.y && my <= fridge.y + fridge.height) {
+    if (mx >= fridge.x && mx <= fridge.x + fridge.width && my >= fridge.y && my <= fridge.y + fridge.height && outside === false) {
       hunger = Math.min(100, hunger + 30);
       fun = Math.min(100, fun + 5);
       pet.x = fridge.x + 40;
@@ -270,7 +270,38 @@ function draw() {
   else petImg = petIdle;
   if (petImg.complete) {
     ctx.save();
-    if (petState === 'walk' && walkDirection === 1 && gameOver === false) {
+    if (petState === 'walk' && outside === true && walkDirection === 1) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#87CEEB'; // sky color
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#228B22'; // grass color
+      ctx.fillRect(0, 390, canvas.width, 300);
+      ctx.drawImage(doorImg, door.x, door.y, door.width, door.height);
+      ctx.translate(pet.x + pet.width, pet.y);
+      ctx.scale(-1, 1);
+      ctx.drawImage(petImg, pet.x, pet.y, pet.width, pet.height);
+    }
+    else if (petState === 'walk' && outside === true) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#87CEEB'; // sky color
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#228B22'; // grass color
+      ctx.fillRect(0, 390, canvas.width, 300);
+      ctx.drawImage(doorImg, door.x, door.y, door.width, door.height);
+      ctx.drawImage(petImg, pet.x, pet.y, pet.width, pet.height);
+    }
+    else if (petState === 'idle' && outside === true && walkDirection === 1) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#87CEEB'; // sky color
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#228B22'; // grass color
+      ctx.fillRect(0, 390, canvas.width, 300);
+      ctx.drawImage(doorImg, door.x, door.y, door.width, door.height);
+      ctx.translate(pet.x + pet.width, pet.y);
+      ctx.scale(-1, 1);
+      ctx.drawImage(petImg, pet.x, pet.y, pet.width, pet.height);
+    }
+    else if (petState === 'walk' && walkDirection === 1 && gameOver === false) {
       ctx.translate(pet.x + pet.width, pet.y);
       ctx.scale(-1, 1);
       ctx.drawImage(petImg, 0, 0, pet.width, pet.height);
@@ -279,13 +310,6 @@ function draw() {
       ctx.translate(pet.x + pet.width, pet.y);
       ctx.scale(-1, 1);
       ctx.drawImage(petImg, 0, 0, pet.width, pet.height);
-    }
-    else if (outside === true) {
-      ctx.fillStyle = '#87CEEB'; // sky color
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#228B22'; // grass color
-      ctx.fillRect(0, 390, canvas.width, 300);
-      ctx.drawImage(petImg, pet.x, pet.y, pet.width, pet.height);
     }
     else if (gameOver === false) {
       ctx.drawImage(petImg, pet.x, pet.y, pet.width, pet.height);
